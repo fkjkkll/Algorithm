@@ -7,3 +7,4 @@
 - [红黑树](./RbTree/)
 - [各类排序](./Sort/)
 - [有序集合/跳跃链表](./SortedSet/)
+- [稀疏集](./SparseSet/)
