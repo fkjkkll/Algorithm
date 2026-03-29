@@ -1,5 +1,10 @@
-﻿public static partial class MySort
+﻿using System.Runtime.CompilerServices;
+
+namespace Sort;
+
+public static class SortUtils
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Swap<T>(IList<T> arr, int i1, int i2)
     {
         (arr[i2], arr[i1]) = (arr[i1], arr[i2]);

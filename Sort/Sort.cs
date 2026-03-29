@@ -1,16 +1,18 @@
-﻿public static partial class MySort
+﻿namespace Sort;
+
+public static class Sort
 {
     // 冒泡排序
     public static void BubbleSort<T>(IList<T> arr) where T : IComparable<T>
     {
-        for (int last = arr.Count - 1; last > 0; --last)
+        for (var last = arr.Count - 1; last > 0; --last)
         {
             var end = true;
-            for (int i = 0; i < last; ++i)
+            for (var i = 0; i < last; ++i)
             {
                 if (arr[i].CompareTo(arr[i + 1]) > 0)
                 {
-                    Swap(arr, i, i + 1);
+                    SortUtils.Swap(arr, i, i + 1);
                     end = false;
                 }
             }
@@ -22,7 +24,7 @@
     // 插入排序
     public static void InsertSort<T>(IList<T> arr) where T : IComparable<T>
     {
-        for (int i = 1; i < arr.Count; ++i)
+        for (var i = 1; i < arr.Count; ++i)
         {
             var pre = i - 1;
             var origin = arr[i];
@@ -38,9 +40,9 @@
     }
 
     // 插入排序with区间
-    public static void InsertSort<T>(IList<T> arr, int l, int r) where T : IComparable<T>
+    private static void InsertSort<T>(IList<T> arr, int l, int r) where T : IComparable<T>
     {
-        for (int i = l + 1; i <= r; ++i)
+        for (var i = l + 1; i <= r; ++i)
         {
             var pre = i - 1;
             var origin = arr[i];
@@ -58,19 +60,19 @@
     // 二分插入排序
     public static void BinaryInsertSort<T>(IList<T> arr, int l, int r) where T : IComparable<T>
     {
-        for (int i = l + 1; i <= r; ++i)
+        for (var i = l + 1; i <= r; ++i)
         {
             var origin = arr[i];
             int bl = l, br = i - 1;
             while (bl <= br)
             {
-                int bm = (bl + br) >> 1;
+                var bm = (bl + br) >> 1;
                 if (arr[bm].CompareTo(origin) > 0)
                     br = bm - 1;
                 else
                     bl = bm + 1;
             }
-            for (int t = i; t > bl; --t)
+            for (var t = i; t > bl; --t)
                 arr[t] = arr[t - 1];
             arr[bl] = origin;
         }
@@ -79,10 +81,10 @@
     // 希尔排序
     public static void ShellSort<T>(IList<T> arr) where T : IComparable<T>
     {
-        int power = PowerOfTwoFloor(arr.Count);
-        for (int delta = power - 1; delta >= 1; delta = power - 1)
+        var power = SortUtils.PowerOfTwoFloor(arr.Count);
+        for (var delta = power - 1; delta >= 1; delta = power - 1)
         {
-            for (int cur = delta; cur < arr.Count; ++cur)
+            for (var cur = delta; cur < arr.Count; ++cur)
             {
                 var temp = arr[cur];
                 var pre = cur - delta;
@@ -102,29 +104,29 @@
     // 选择排序
     public static void SelectSort<T>(IList<T> arr) where T : IComparable<T>
     {
-        for (int i = 0; i < arr.Count - 1; ++i)
+        for (var i = 0; i < arr.Count - 1; ++i)
         {
             var minPosition = i;
-            for (int j = i; j < arr.Count; ++j)
+            for (var j = i; j < arr.Count; ++j)
             {
                 if (arr[j].CompareTo(arr[minPosition]) < 0)
                     minPosition = j;
             }
             if (i != minPosition)
-                Swap(arr, i, minPosition);
+                SortUtils.Swap(arr, i, minPosition);
         }
     }
 
     // 堆排序
     public static void HeapSort<T>(IList<T> arr) where T : IComparable<T>
     {
-        int count = arr.Count;
-        for (int subRoot = (arr.Count - 2) >> 1; subRoot >= 0; --subRoot)
-            PriorityQueueDown(arr, subRoot, count);
-        for (int left = arr.Count - 1; left > 0; --left)
+        var count = arr.Count;
+        for (var subRoot = (arr.Count - 2) >> 1; subRoot >= 0; --subRoot)
+            SortUtils.PriorityQueueDown(arr, subRoot, count);
+        for (var left = arr.Count - 1; left > 0; --left)
         {
-            Swap(arr, 0, left);
-            PriorityQueueDown(arr, 0, left);
+            SortUtils.Swap(arr, 0, left);
+            SortUtils.PriorityQueueDown(arr, 0, left);
         }
     }
 
@@ -140,11 +142,11 @@
     {
         if (l >= r)
             return;
-        int m = (l + r) >> 1;
+        var m = (l + r) >> 1;
         DoMergeSortRecursive(arr, tempList, l, m);
         DoMergeSortRecursive(arr, tempList, m + 1, r);
         Merge(arr, tempList, l, m + 1, r);
-        for (int i = l; i <= r; i++)
+        for (var i = l; i <= r; i++)
             arr[i] = tempList[i];
     }
 
@@ -165,7 +167,7 @@
     // 这一步最是精髓
     private static void DoMergeSortIterative<T>(IList<T> arr, IList<T> tempList) where T : IComparable<T>
     {
-        int mergeSize = 1;
+        var mergeSize = 1;
         while (mergeSize < arr.Count)
         {
             DoMergeOnce(arr, tempList, mergeSize);
@@ -177,11 +179,11 @@
 
     private static void DoMergeOnce<T>(IList<T> arr, IList<T> tempList, int mergeSize) where T : IComparable<T>
     {
-        int lStart = 0;
+        var lStart = 0;
         for (; lStart + (mergeSize << 1) - 1 < arr.Count; lStart += mergeSize << 1)
         {
-            int rStart = lStart + mergeSize;
-            int rEnd = rStart + mergeSize - 1;
+            var rStart = lStart + mergeSize;
+            var rEnd = rStart + mergeSize - 1;
             Merge(arr, tempList, lStart, rStart, rEnd);
         }
         if (lStart + mergeSize < arr.Count)
@@ -210,7 +212,7 @@
         int indexL = l + 1, indexR = r;
         while (indexL < indexR)
         {
-            bool moved = false;
+            var moved = false;
             while (indexL < indexR && arr[indexL].CompareTo(pivot) < 0)
             {
                 ++indexL;
@@ -221,7 +223,7 @@
                 --indexR;
                 moved = true;
             }
-            Swap(arr, indexL, indexR);
+            SortUtils.Swap(arr, indexL, indexR);
             if (!moved)
             {
                 ++indexL;
@@ -230,7 +232,7 @@
         }
         if (arr[indexL].CompareTo(pivot) >= 0)
             --indexL;
-        Swap(arr, l, indexL);
+        SortUtils.Swap(arr, l, indexL);
         DoQuickSort_1(arr, l, indexL - 1);
         DoQuickSort_1(arr, indexL + 1, r);
     }
@@ -251,11 +253,11 @@
             while (arr[--indexR].CompareTo(pivot) > 0) ; // 左侧枢纽作为哨兵，所以这里不需要判断指针大小
             while (indexL < indexR && arr[++indexL].CompareTo(pivot) < 0) ; // 右侧由于没有哨兵，所以需要判断指针大小
             if (indexL < indexR)
-                Swap(arr, indexL, indexR);
+                SortUtils.Swap(arr, indexL, indexR);
             else
                 break;
         }
-        Swap(arr, l, indexL);
+        SortUtils.Swap(arr, l, indexL);
         DoQuickSort_Scratch(arr, l, indexL - 1);
         DoQuickSort_Scratch(arr, indexL + 1, r);
     }
@@ -271,12 +273,12 @@
         }
         int m = (l + r) >> 1;
         if (arr[l].CompareTo(arr[m]) > 0)
-            Swap(arr, l, m);
+            SortUtils.Swap(arr, l, m);
         if (arr[m].CompareTo(arr[r]) > 0)
-            Swap(arr, m, r);
+            SortUtils.Swap(arr, m, r);
         if (arr[l].CompareTo(arr[m]) > 0)
-            Swap(arr, l, m);
-        Swap(arr, m, r - 1); // 锚点暂存右边第二位，这样即使只有两个元素，也是完全正确的
+            SortUtils.Swap(arr, l, m);
+        SortUtils.Swap(arr, m, r - 1); // 锚点暂存右边第二位，这样即使只有两个元素，也是完全正确的
         var pivot = arr[r - 1];
         int indexL = l, indexR = r - 1;
         while (true)
@@ -285,12 +287,12 @@
             while (arr[++indexL].CompareTo(pivot) < 0) ; // 左右侧都有哨兵，可以消去判断指针大小的语句
             while (arr[--indexR].CompareTo(pivot) > 0) ; // 左右侧都有哨兵，可以消去判断指针大小的语句
             if (indexL < indexR)
-                Swap(arr, indexL, indexR);
+                SortUtils.Swap(arr, indexL, indexR);
             else
                 break;
         }
         // 需要将数换回来，由于锚点在右侧，所以需要一个大于等于锚点的值，indexL满足；indexR是小于等于锚点的值，不满足
-        Swap(arr, indexL, r - 1);
+        SortUtils.Swap(arr, indexL, r - 1);
         DoQuickSort_Three(arr, l, indexL - 1);
         DoQuickSort_Three(arr, indexL + 1, r);
     }
@@ -368,7 +370,7 @@
     }
 
     // 基数排序（最高位优先）
-    public static void MSD(IList<int> arr)
+    public static void Msd(IList<int> arr)
     {
         List<int> trr = new(arr);
         var maxItem = int.MinValue;
@@ -382,7 +384,7 @@
             maxItem >>= 4;
         }
         mask <<= shiftCount; // 得到最大的遮罩
-        DoMSD(arr, trr, 0, arr.Count - 1, mask);
+        DoMsd(arr, trr, 0, arr.Count - 1, mask);
     }
 
     // 获得遮罩的额外位移次数
@@ -398,7 +400,7 @@
         return shiftCount - 1;
     }
 
-    private static void DoMSD(IList<int> arr, IList<int> trr, int l, int r, uint mask)
+    private static void DoMsd(IList<int> arr, IList<int> trr, int l, int r, uint mask)
     {
         if (l >= r || mask == 0)
             return;
@@ -437,9 +439,9 @@
         for (int i = 0; i < 16; ++i)
         {
             if (i < 15)
-                DoMSD(arr, trr, l + counting[i], l + counting[i + 1] - 1, mask >> 4);
+                DoMsd(arr, trr, l + counting[i], l + counting[i + 1] - 1, mask >> 4);
             else
-                DoMSD(arr, trr, l + counting[i], r, mask >> 4);
+                DoMsd(arr, trr, l + counting[i], r, mask >> 4);
         }
     }
 }
