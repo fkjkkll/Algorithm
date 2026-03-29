@@ -1,5 +1,4 @@
-﻿using SortedSet;
-var rankedList = new SortedSet.SortedSet<string>();
+﻿var rankedList = new SortedSet.SortedSet<string>();
 
 // 添加一些测试数据
 rankedList.Add("A", 3);
@@ -35,13 +34,14 @@ Console.WriteLine($"A 的排名: {rankedList.GetReverseRank("A")}");
 Console.WriteLine($"A 的逆序排名: {rankedList.GetRank("A")}");
 
 // 获取前3名
-var top3 = rankedList.GetTopN(10);
-Console.WriteLine($"前10名: {string.Join(", ", top3)}");
+List<string> tempList = [];
+rankedList.GetTopN(10, tempList);
+Console.WriteLine($"前10名: {string.Join(", ", tempList)}");
 
 // 按排名范围查询
-var range = rankedList.GetRangeByRank(2, 4);
-Console.WriteLine($"GetRangeByRank: {string.Join(", ", range)}");
+rankedList.GetRangeByRank(2, 4, tempList);
+Console.WriteLine($"GetRangeByRank: {string.Join(", ", tempList)}");
 
 // 按分数范围查询
-var scoreRange = rankedList.GetRangeByScore(10, 20);
-Console.WriteLine($"区间分数的人: {string.Join(", ", scoreRange)}");
+rankedList.GetRangeByScore(10, 20, tempList);
+Console.WriteLine($"区间分数的人: {string.Join(", ", tempList)}");
