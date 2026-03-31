@@ -1,14 +1,16 @@
-﻿
+﻿using SparseSet;
 
+IndependentSparseDict<string> isd = new(10,5);
 
-using SparseSet;
+var a = isd.Add("aaa");
+var b = isd.Add("bbb");
+var c = isd.Add("ccc");
+var d = isd.Add("ddd");
+var e = isd.Add("eee");
 
-SparseDict<long> sd = new(32,8);
-sd.Add(24, 7545);
-sd.Add(22, 84);
-sd.Add(12, 9999);
+isd.Remove(c);
 
-foreach (var e in sd)
-{
-    Console.WriteLine(e);
-}
+var f = isd.Add("fff");
+
+if (isd.TryGet(f, out var r))
+    Console.WriteLine(r);
